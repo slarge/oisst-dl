@@ -62,6 +62,25 @@ OISST_load_month <- function(month, lon1, lon2, lat1, lat2){
 
 
 
+### Needed functions
+na_aware_ews <- function(mat, cg_subsize) { 
+  require(moments) # required packages
+  require(raster)
+  mat_coarse <- coarse_grain(mat, cg_subsize)
+  c(skewness = skewness(as.vector(mat_coarse), na.rm = TRUE), 
+    variance = var(as.vector(mat_coarse), na.rm = TRUE), 
+    moran    = Moran(raster(mat_coarse)))
+}
+
+randomize_matrix_no_na <- function(mat) {
+  mat[!is.na(mat)] <- sample(mat[!is.na(mat)])
+  return(mat)
+}
+
+
+
+
+
 OISST_load_season <- function(season, lon1, lon2, lat1, lat2){
 
   t_season <- gsub("_.*", "", season)
